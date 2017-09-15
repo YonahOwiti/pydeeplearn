@@ -14,7 +14,9 @@ import cPickle as pickle
 # We need this to import other modules
 sys.path.append("..")
 
-from lib import deepbelief
+#from lib import deepbelief
+import CNN as cnn
+import keras
 
 WINDOW_NAME = "Emotion recognition"
 TIME_BETWEEN_FACE_CHECKS = 0.1
@@ -69,16 +71,19 @@ if args.emotions:
     emotion_to_text[index] = emotion
 
 # Person by Catherine Please from The Noun Project
-HAPPY_IMAGE = cv2.imread("icon_4895withoutalpha.png", cv2.IMREAD_GRAYSCALE)
+HAPPY_IMAGE = cv2.imread("happy.png", cv2.IMREAD_GRAYSCALE)
 # Sad by Cengiz SARI from The Noun Project
-SAD_IMAGE = cv2.imread("icon_39345withoutalpha.png", cv2.IMREAD_GRAYSCALE)
+SAD_IMAGE = cv2.imread("sad.png", cv2.IMREAD_GRAYSCALE)
 # Surprise designed by Chris McDonnell from the thenounproject.com
-SUPRISED_IMAGE = cv2.imread("icon_6231withoutalpha.png", cv2.IMREAD_GRAYSCALE)
+SUPRISED_IMAGE = cv2.imread("surprise.png", cv2.IMREAD_GRAYSCALE)
+
+ANGRY_IMAGE = cv2.imread("angry.png", cv2.IMREAD_GRAYSCALE)
 
 EMOTION_TO_IMAGE = {
   0: HAPPY_IMAGE,
   1: SAD_IMAGE,
-  2: SUPRISED_IMAGE
+  2: SUPRISED_IMAGE,
+  3: ANGRY_IMAGE
 }
 
 # When user presses Control-C, gracefully exit program

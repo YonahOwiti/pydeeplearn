@@ -41,7 +41,8 @@ args = parser.parse_args()
 sys.path.append("..")
 
 from lib import activationfunctions
-from lib import deepbelief as db
+#from lib import deepbelief as db
+import CNN as cnn
 from lib import common
 
 
@@ -132,32 +133,36 @@ def trainNetWithAllData():
   supervisedLearningRate = 0.001
   momentumMax = 0.99
 
-  net = db.DBN(4, [1200, 1500, 1000, len(args.emotions)],
-             binary=False,
-             activationFunction=activationFunction,
-             rbmActivationFunctionVisible=rbmActivationFunctionVisible,
-             rbmActivationFunctionHidden=rbmActivationFunctionHidden,
-             unsupervisedLearningRate=unsupervisedLearningRate,
-             supervisedLearningRate=supervisedLearningRate,
-             momentumMax=momentumMax,
-             nesterovMomentum=True,
-             rbmNesterovMomentum=True,
-             rmsprop=True,
-             miniBatchSize=20,
-             hiddenDropout=0.5,
-             visibleDropout=0.8,
-             momentumFactorForLearningRateRBM=False,
-             firstRBMheuristic=False,
-             rbmVisibleDropout=1.0,
-             rbmHiddenDropout=1.0,
-             preTrainEpochs=10,
-             sparsityConstraintRbm=False,
-             sparsityRegularizationRbm=0.001,
-             sparsityTragetRbm=0.01)
+  # net = db.DBN(4, [1200, 1500, 1000, len(args.emotions)],
+  #            binary=False,
+  #            activationFunction=activationFunction,
+  #            rbmActivationFunctionVisible=rbmActivationFunctionVisible,
+  #            rbmActivationFunctionHidden=rbmActivationFunctionHidden,
+  #            unsupervisedLearningRate=unsupervisedLearningRate,
+  #            supervisedLearningRate=supervisedLearningRate,
+  #            momentumMax=momentumMax,
+  #            nesterovMomentum=True,
+  #            rbmNesterovMomentum=True,
+  #            rmsprop=True,
+  #            miniBatchSize=20,
+  #            hiddenDropout=0.5,
+  #            visibleDropout=0.8,
+  #            momentumFactorForLearningRateRBM=False,
+  #            firstRBMheuristic=False,
+  #            rbmVisibleDropout=1.0,
+  #            rbmHiddenDropout=1.0,
+  #            preTrainEpochs=10,
+  #            sparsityConstraintRbm=False,
+  #            sparsityRegularizationRbm=0.001,
+  #            sparsityTragetRbm=0.01)
+  #
+  # net.train(data, labels, maxEpochs=200,
+  #           validation=False,
+  #           unsupervisedData=unsupervisedData)
 
-  net.train(data, labels, maxEpochs=200,
-            validation=False,
-            unsupervisedData=unsupervisedData)
+  net = cnn.CNN(width=30,height=40,classes=len(args.emotions))
+
+  net.train(data, labels)
 
   with open(args.net_file, "wb") as f:
     pickle.dump(net, f)
@@ -194,32 +199,38 @@ def trainAndTestNet():
   trainData = data[train]
   trainLabels = labels[train]
 
-  net = db.DBN(4, [1200, 1500, 1000, len(args.emotions)],
-             binary=False,
-             activationFunction=activationFunction,
-             rbmActivationFunctionVisible=rbmActivationFunctionVisible,
-             rbmActivationFunctionHidden=rbmActivationFunctionHidden,
-             unsupervisedLearningRate=unsupervisedLearningRate,
-             supervisedLearningRate=supervisedLearningRate,
-             momentumMax=momentumMax,
-             nesterovMomentum=True,
-             rbmNesterovMomentum=True,
-             rmsprop=True,
-             miniBatchSize=20,
-             hiddenDropout=0.5,
-             visibleDropout=0.8,
-             momentumFactorForLearningRateRBM=False,
-             firstRBMheuristic=False,
-             rbmVisibleDropout=1.0,
-             rbmHiddenDropout=1.0,
-             preTrainEpochs=10,
-             sparsityConstraintRbm=False,
-             sparsityRegularizationRbm=0.001,
-             sparsityTragetRbm=0.01)
+  # net = db.DBN(4, [1200, 1500, 1000, len(args.emotions)],
+  #            binary=False,
+  #            activationFunction=activationFunction,
+  #            rbmActivationFunctionVisible=rbmActivationFunctionVisible,
+  #            rbmActivationFunctionHidden=rbmActivationFunctionHidden,
+  #            unsupervisedLearningRate=unsupervisedLearningRate,
+  #            supervisedLearningRate=supervisedLearningRate,
+  #            momentumMax=momentumMax,
+  #            nesterovMomentum=True,
+  #            rbmNesterovMomentum=True,
+  #            rmsprop=True,
+  #            miniBatchSize=20,
+  #            hiddenDropout=0.5,
+  #            visibleDropout=0.8,
+  #            momentumFactorForLearningRateRBM=False,
+  #            firstRBMheuristic=False,
+  #            rbmVisibleDropout=1.0,
+  #            rbmHiddenDropout=1.0,
+  #            preTrainEpochs=10,
+  #            sparsityConstraintRbm=False,
+  #            sparsityRegularizationRbm=0.001,
+  #            sparsityTragetRbm=0.01)
+  #
+  # net.train(trainData, trainLabels, maxEpochs=200,
+  #           validation=False,
+  #           unsupervisedData=unsupervisedData)
+  #
+  # probs, predicted = net.classify(data[test])
 
-  net.train(trainData, trainLabels, maxEpochs=200,
-            validation=False,
-            unsupervisedData=unsupervisedData)
+  net = cnn.CNN(30,40,len(args.emotions))
+
+  net.train(trainData, trainLabels)
 
   probs, predicted = net.classify(data[test])
 
@@ -288,32 +299,38 @@ def getHyperParamsAndBestNet():
     trainData = data[train]
     trainLabels = labels[train]
 
-    net = db.DBN(4, [1200, 1500, 1000, len(args.emotions)],
-               binary=False,
-               activationFunction=activationFunction,
-               rbmActivationFunctionVisible=rbmActivationFunctionVisible,
-               rbmActivationFunctionHidden=rbmActivationFunctionHidden,
-               unsupervisedLearningRate=unsupervisedLearningRate,
-               supervisedLearningRate=supervisedLearningRate,
-               momentumMax=momentumMax,
-               nesterovMomentum=True,
-               rbmNesterovMomentum=True,
-               rmsprop=True,
-               miniBatchSize=20,
-               hiddenDropout=0.5,
-               visibleDropout=0.8,
-               momentumFactorForLearningRateRBM=False,
-               firstRBMheuristic=False,
-               rbmVisibleDropout=1.0,
-               rbmHiddenDropout=1.0,
-               preTrainEpochs=10,
-               sparsityConstraintRbm=False,
-               sparsityRegularizationRbm=0.001,
-               sparsityTragetRbm=0.01)
+    # net = db.DBN(4, [1200, 1500, 1000, len(args.emotions)],
+    #            binary=False,
+    #            activationFunction=activationFunction,
+    #            rbmActivationFunctionVisible=rbmActivationFunctionVisible,
+    #            rbmActivationFunctionHidden=rbmActivationFunctionHidden,
+    #            unsupervisedLearningRate=unsupervisedLearningRate,
+    #            supervisedLearningRate=supervisedLearningRate,
+    #            momentumMax=momentumMax,
+    #            nesterovMomentum=True,
+    #            rbmNesterovMomentum=True,
+    #            rmsprop=True,
+    #            miniBatchSize=20,
+    #            hiddenDropout=0.5,
+    #            visibleDropout=0.8,
+    #            momentumFactorForLearningRateRBM=False,
+    #            firstRBMheuristic=False,
+    #            rbmVisibleDropout=1.0,
+    #            rbmHiddenDropout=1.0,
+    #            preTrainEpochs=10,
+    #            sparsityConstraintRbm=False,
+    #            sparsityRegularizationRbm=0.001,
+    #            sparsityTragetRbm=0.01)
+    #
+    # net.train(trainData, trainLabels, maxEpochs=200,
+    #           validation=False,
+    #           unsupervisedData=unsupervisedData)
+    #
+    # probs, predicted = net.classify(data[test])
 
-    net.train(trainData, trainLabels, maxEpochs=200,
-              validation=False,
-              unsupervisedData=unsupervisedData)
+    net = cnn.CNN(30,40,len(args.emotions))
+
+    net.train(trainData, trainLabels)
 
     probs, predicted = net.classify(data[test])
 
@@ -347,10 +364,10 @@ def getHyperParamsAndBestNet():
 
 if __name__ == '__main__':
   if args.display_example_data:
-    visualizeTrainingData()
+    #visualizeTrainingData()
+    print "Done"
 
   if args.cv:
     getHyperParamsAndBestNet()
   else:
     trainNetWithAllData()
-
